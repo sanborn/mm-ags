@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Cached Tile Example</title>
+    <link rel="stylesheet" href="css/test_app.css" />
+  </head>
+  <body>
+    <div id="container">
+      <div id="main">
+        <div id="map"></div>
+      </div>
+    </div>
+    <script src="../lib/modestmaps.min.js"></script>
+    <script src="../src/ags.js"></script>
+    <script type="text/javascript">
+      window.onload = function() {
+        var layers = [];
+        
+        var base = new AGS.Layer.Tiled('http://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{Z}/{Y}/{X}');
+        layers.push(base);
+
+        var ref = new AGS.Layer.Tiled('http://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{Z}/{Y}/{X}');
+        layers.push(ref);
+
+        window.map = new MM.Map('map', layers);
+        map.setCenterZoom(new MM.Location(32.793508, -97.326188), 12);
+      }
+    </script>
+  </body>
+</html>

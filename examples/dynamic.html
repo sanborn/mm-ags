@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Dynamic (Tiled) Example</title>
+    <link rel="stylesheet" href="css/test_app.css" />
+  </head>
+  <body>
+    <div id="container">
+      <div id="main">
+        <div id="map"></div>
+      </div>
+    </div>
+    <script src="../lib/modestmaps.js"></script>
+    <script src="../src/ags.js"></script>
+    <script type="text/javascript">
+      window.onload = function() {
+        var layers = [];
+
+        var base = new AGS.Layer.Tiled('http://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{Z}/{Y}/{X}');
+        layers.push(base);
+
+        var dynUrl = 'http://data.sanborn.com/ArcGIS/rest/services/LittleRock/EnvironmentalPermits/MapServer'
+
+        var dynLayer = new AGS.DynamicLayer(dynUrl);
+        layers.push(dynLayer);
+
+        window.map = new MM.Map('map', layers);
+        map.setCenterZoom(new MM.Location(34.746481, -92.289595), 13);
+      };
+    </script>
+  </body>
+</html>

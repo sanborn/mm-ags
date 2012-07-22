@@ -234,7 +234,7 @@ AGS.Layer.Dynamic = function (url, options) {
   this.getTileUrl = function (coordinate) {
     var _t = this;
     var coord = this.sourceCoordinate(coordinate);
-    if(!coord) return null;
+    if (!coord) return null;
     var base = _t.url;
 
     var nwPoint = coord,
@@ -254,7 +254,7 @@ AGS.Layer.Dynamic = function (url, options) {
 
     base = base + '/export?' + params.join('&') + '&bbox=' + bbox + '&bboxSR=4326&size=256,256';
 
-    if(_t.options.token) {
+    if (_t.options.token) {
       base = base + '&token=' + _t.options.token;
     }
 
@@ -332,13 +332,67 @@ AGS.Layer.Dynamic.prototype = {
     this.options.layers = defs.join(';');
   },
 
-  getTile: function(coord) {
+  getTile: function (coord) {
     return this.getTileUrl(coord);
   } 
 };
 
 MM.extend(AGS.Layer.Dynamic, MM.MapProvider);
 
-AGS.DynamicLayer = function(url, options) {
+AGS.DynamicLayer = function (url, options) {
   return new MM.Layer(new AGS.Layer.Dynamic(url, options));
 };
+
+AGS.Layer.WMS = function (url, options) {
+  this.url = url;
+  var options = options || {};
+  MM.merge(this.options, options);
+
+  this.getTileUrl = function (coordinate) {
+    var _t = this,
+        coord = this.sourceCoordinate(coordinate);
+    
+    if (!coord) return null;
+
+    var url = _t.url;
+
+    var nwPoint = coord,
+        sePoint = coord.down().right(),
+        nwLoc = map.coordinateLocation(nwPoint),
+        seLoc = map.coordinateLocation(sePoint),
+        bbox = [nwLoc.lon, seLoc.lat, seLoc.lon, nwLoc.lat].join(',');
+
+    var params = [];
+
+    for (var option in this.options) {
+      params.push(option + '=' + this.options[option]);
+    }
+
+    url = url + '?' + params.join('&') + '&bbox=' + bbox;
+
+    return url;
+  }
+};
+
+AGS.Layer.WMS.prototype = {
+  options: {
+    service: 'wms',
+    request: 'getmap',
+    version: '1.1.1',
+    format: 'image/png',
+    transparent: true,
+    srs: 'epsg:4326',
+    width: 256,
+    height: 256,
+    style: ''
+  },
+  getTile: function (coord) {
+    return this.getTileUrl(coord);
+  }
+};
+
+MM.extend(AGS.Layer.WMS, MM.MapProvider);
+
+AGS.WMSLayer = function (url, options) {
+  return new MM.Layer(new AGS.Layer.WMS(url, options));
+}

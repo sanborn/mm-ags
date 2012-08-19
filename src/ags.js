@@ -1,9 +1,3 @@
-MM.merge = function (base, ext) {
-  for (var prop in ext) {
-    base[prop] = ext[prop];
-  }
-};
-
 AGS = {};
 
 AGS.Security = function (url, options, callback) {
@@ -226,7 +220,7 @@ AGS.Layer.Tiled.prototype = {};
 AGS.Layer.Dynamic = function (url, options) {
   this.url = url;
   var options = options || {};
-  MM.merge(this.options, options);
+  MM.extend(this.options, options);
 
   this.parseLayers();
   this.parseLayerDefs();
@@ -346,7 +340,7 @@ AGS.DynamicLayer = function (url, options) {
 AGS.Layer.WMS = function (url, options) {
   this.url = url;
   var options = options || {};
-  MM.merge(this.options, options);
+  MM.extend(this.options, options);
 
   this.getTileUrl = function (coordinate) {
     var _t = this,
